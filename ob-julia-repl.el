@@ -8,7 +8,7 @@
 ;; Maintainer: Shigeaki Nishina
 ;; Created: October 31, 2020
 ;; URL: https://github.com/shg/ob-julia-vterm.el
-;; Package-Requires: ((emacs "26.1") (julia-vterm "0.16") (queue "0.2"))
+;; Package-Requires: ((emacs "26.1") (queue "0.2"))
 ;; Version: 0.2h
 ;; Keywords: julia, org, outlines, literate programming, reproducible research
 
@@ -64,7 +64,9 @@
 	       (if session "eval(Meta.parse(raw\"\"\"begin\n" "\n"))
      (if session "begin\n" "let\n"))
    body
-   (if session "" "\nend\n")))
+   (if (and (eq result-type 'output) session)
+       "\nend\"\"\"))")
+   "\nend\n"))
 
 (defun org-babel-julia-repl--make-str-to-run (result-type src-file out-file)
   "Make Julia code that load-s SRC-FILE and save-s the result to OUT-FILE, depending on RESULT-TYPE."
